@@ -57,4 +57,7 @@ pub enum RustADBError {
     /// An error occurred while getting user's home directory
     #[error(transparent)]
     HomeError(#[from] homedir::GetHomeError),
+    /// Package manager returned an error
+    #[error("Package manager returned error: {0}")]
+    PackageManagerError(String),
 }

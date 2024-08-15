@@ -23,4 +23,14 @@ pub enum LocalCommand {
     },
     /// Dump framebuffer of device
     Framebuffer { path: String },
+    /// Install a package on the device
+    Install {
+        apk_path: String,
+        /// Replace existing application
+        #[arg(short)]
+        reinstall: bool,
+        /// Grant all runtime permissions
+        #[arg(short)]
+        grant_runtime_permissions: bool,
+    },
 }

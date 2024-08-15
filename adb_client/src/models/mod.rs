@@ -6,6 +6,7 @@ mod device_long;
 mod device_short;
 mod device_state;
 mod host_features;
+mod install_result;
 mod reboot_type;
 mod sync_command;
 
@@ -17,5 +18,6 @@ pub use device_long::DeviceLong;
 pub use device_short::DeviceShort;
 pub use device_state::DeviceState;
 pub use host_features::HostFeatures;
+pub use install_result::InstallResult;
 pub use reboot_type::RebootType;
 pub use sync_command::SyncCommand;

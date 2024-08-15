@@ -62,6 +62,15 @@ fn main() -> Result<()> {
                     device.framebuffer(&path)?;
                     println!("Framebuffer dropped: {path}");
                 }
+                LocalCommand::Install {
+                    apk_path,
+                    reinstall,
+                    grant_runtime_permissions,
+                } => {
+                    println!("Performing Push Install");
+                    device.install(&apk_path, reinstall, grant_runtime_permissions)?;
+                    println!("Installed {apk_path}");
+                }
             }
         }
         Command::Host(host) => {
