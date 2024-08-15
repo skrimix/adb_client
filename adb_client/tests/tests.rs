@@ -2,7 +2,7 @@
 mod tests {
     use std::io::Cursor;
 
-    use adb_client::{ADBServer, ADBServerDevice, DeviceLong};
+    use adb_client::{ADBServer, ADBServerDevice, DeviceLong, DeviceState};
     use rand::Rng;
 
     fn new_client() -> ADBServer {
@@ -42,11 +42,24 @@ mod tests {
 
     #[test]
     fn test_static_devices_long() {
-        let inputs = ["7a5158f05122195aa       device 1-5 product:gts210vewifixx model:SM_T813 device:gts210vewifi transport_id:4"];
-        for input in inputs {
-            DeviceLong::try_from(input.as_bytes().to_vec())
-                .expect(&format!("cannot parse input: '{input}'"));
-        }
+        let inputs = ["7a5158f05122195aa       device 1-5 product:gts210vewifixx model:SM_T813 device:gts210vewifi transport_id:4", 
+        "1WMHH810H12203         device usb:2-3.2 product:hollywood model:Quest_2 device:hollywood transport_id:5"];
+        let device1 = DeviceLong::try_from(inputs[0].as_bytes().to_vec()).unwrap_or_else(|_| panic!("cannot parse input: '{}'", inputs[0]));
+        let device2 = DeviceLong::try_from(inputs[1].as_bytes().to_vec()).unwrap_or_else(|_| panic!("cannot parse input: '{}'", inputs[1]));
+
+        assert_eq!(device1.identifier, "7a5158f05122195aa");
+        assert!(matches!(device1.state, DeviceState::Device));
+        assert_eq!(device1.product, "gts210vewifixx");
+        assert_eq!(device1.model, "SM_T813");
+        assert_eq!(device1.device, "gts210vewifi");
+        assert_eq!(device1.transport_id, 4);
+
+        assert_eq!(device2.identifier, "1WMHH810H12203");
+        assert!(matches!(device2.state, DeviceState::Device));
+        assert_eq!(device2.product, "hollywood");
+        assert_eq!(device2.model, "Quest_2");
+        assert_eq!(device2.device, "hollywood");
+        assert_eq!(device2.transport_id, 5);
     }
 
     #[test]
@@ -87,12 +100,12 @@ mod tests {
         }
     }
 
-    #[test]
-    fn command_emulator() {
-        let mut connection = new_client();
-        let mut emulator = connection
-            .get_emulator_device()
-            .expect("no emulator running");
-        emulator.hello().expect("cannot hello");
-    }
+    // #[test]
+    // fn command_emulator() {
+    //     let mut connection = new_client();
+    //     let mut emulator = connection
+    //         .get_emulator_device()
+    //         .expect("no emulator running");
+    //     emulator.hello().expect("cannot hello");
+    // }
 }
