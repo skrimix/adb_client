@@ -6,7 +6,7 @@ use crate::{DeviceState, RustADBError};
 use regex::bytes::Regex;
 
 lazy_static! {
-    static ref DEVICES_LONG_REGEX: Regex = Regex::new("^(?P<identifier>\\S+)\\s+(?P<state>\\w+) ((usb:(?P<usb1>.*)|(?P<usb2>\\d-\\d)) )?(product:(?P<product>\\w+) model:(?P<model>\\w+) device:(?P<device>\\w+) )?transport_id:(?P<transport_id>\\d+)$").expect("cannot build devices long regex");
+    static ref DEVICES_LONG_REGEX: Regex = Regex::new("^(?P<identifier>\\S+)\\s+(?P<state>\\w+) ((usb:(?P<usb1>.*?)|(?P<usb2>\\d-\\d)) )?(product:(?P<product>\\w+) model:(?P<model>\\w+) device:(?P<device>\\w+) )?transport_id:(?P<transport_id>\\d+)$").expect("cannot build devices long regex");
 
 }
 
