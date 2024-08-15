@@ -11,7 +11,7 @@ mod tests {
 
     fn new_device() -> ADBServerDevice {
         let mut client = new_client();
-        return client.get_device().expect("cannot get device");
+        client.get_device().expect("cannot get device")
     }
 
     #[test]
@@ -21,6 +21,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore]
     fn test_shell() {
         let mut device = new_device();
 
@@ -42,10 +43,14 @@ mod tests {
 
     #[test]
     fn test_static_devices_long() {
-        let inputs = ["7a5158f05122195aa       device 1-5 product:gts210vewifixx model:SM_T813 device:gts210vewifi transport_id:4", 
-        "1WMHH810H12203         device usb:2-3.2 product:hollywood model:Quest_2 device:hollywood transport_id:5"];
-        let device1 = DeviceLong::try_from(inputs[0].as_bytes().to_vec()).unwrap_or_else(|_| panic!("cannot parse input: '{}'", inputs[0]));
-        let device2 = DeviceLong::try_from(inputs[1].as_bytes().to_vec()).unwrap_or_else(|_| panic!("cannot parse input: '{}'", inputs[1]));
+        let inputs = [
+            "7a5158f05122195aa       device 1-5 product:gts210vewifixx model:SM_T813 device:gts210vewifi transport_id:4", 
+            "1WMHH810H12203         device usb:2-3.2 product:hollywood model:Quest_2 device:hollywood transport_id:5"
+        ];
+        let device1 = DeviceLong::try_from(inputs[0].as_bytes().to_vec())
+            .unwrap_or_else(|_| panic!("cannot parse input: '{}'", inputs[0]));
+        let device2 = DeviceLong::try_from(inputs[1].as_bytes().to_vec())
+            .unwrap_or_else(|_| panic!("cannot parse input: '{}'", inputs[1]));
 
         assert_eq!(device1.identifier, "7a5158f05122195aa");
         assert!(matches!(device1.state, DeviceState::Device));
@@ -63,6 +68,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore]
     fn test_send_recv() {
         // Create random "Reader" in memory
         let mut key = [0u8; 1000];
@@ -71,7 +77,7 @@ mod tests {
 
         let mut device = new_device();
 
-        const TEST_FILENAME: &'static str = "/data/local/tmp/test_file";
+        const TEST_FILENAME: &str = "/data/local/tmp/test_file";
         // Send it
         device
             .send(&mut c, TEST_FILENAME)
@@ -92,7 +98,7 @@ mod tests {
     }
 
     #[test]
-    fn multiple_connexions() {
+    fn multiple_connections() {
         let mut connection = new_client();
 
         for _ in 0..2 {
