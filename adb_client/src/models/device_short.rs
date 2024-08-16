@@ -9,7 +9,7 @@ lazy_static! {
 }
 
 /// Represents a device connected to the ADB server.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DeviceShort {
     /// Unique device identifier.
     pub identifier: String,

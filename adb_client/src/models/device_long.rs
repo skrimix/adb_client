@@ -11,7 +11,7 @@ lazy_static! {
 }
 
 /// Represents a new device with more informations helded.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct DeviceLong {
     /// Unique device identifier.
     pub identifier: String,
@@ -69,7 +69,7 @@ impl TryFrom<Vec<u8>> for DeviceLong {
                     .to_vec(),
             )?)?,
             usb: match groups.name("usb") {
-                    None => "Unk".to_string(),
+                None => "Unk".to_string(),
                 Some(usb) => String::from_utf8(usb.as_bytes().to_vec())?,
             },
             product: match groups.name("product") {
