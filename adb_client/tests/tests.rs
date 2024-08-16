@@ -44,27 +44,45 @@ mod tests {
     #[test]
     fn test_static_devices_long() {
         let inputs = [
-            "7a5158f05122195aa       device 1-5 product:gts210vewifixx model:SM_T813 device:gts210vewifi transport_id:4", 
-            "1WMHH810H12203         device usb:2-3.2 product:hollywood model:Quest_2 device:hollywood transport_id:5"
+            "7a5158f05122195aa       device usb:1-5 product:gts210vewifixx model:SM_T813 device:gts210vewifi transport_id:4", 
+            "1WMHH810H12203         sideload usb:2-3.2 product:hollywood model:Quest_2 device:hollywood transport_id:5",
+            "192.168.1.100:5555     device product:hollywood model:Quest_2 device:hollywood transport_id:6"
         ];
-        let device1 = DeviceLong::try_from(inputs[0].as_bytes().to_vec())
-            .unwrap_or_else(|_| panic!("cannot parse input: '{}'", inputs[0]));
-        let device2 = DeviceLong::try_from(inputs[1].as_bytes().to_vec())
-            .unwrap_or_else(|_| panic!("cannot parse input: '{}'", inputs[1]));
-
-        assert_eq!(device1.identifier, "7a5158f05122195aa");
-        assert!(matches!(device1.state, DeviceState::Device));
-        assert_eq!(device1.product, "gts210vewifixx");
-        assert_eq!(device1.model, "SM_T813");
-        assert_eq!(device1.device, "gts210vewifi");
-        assert_eq!(device1.transport_id, 4);
-
-        assert_eq!(device2.identifier, "1WMHH810H12203");
-        assert!(matches!(device2.state, DeviceState::Device));
-        assert_eq!(device2.product, "hollywood");
-        assert_eq!(device2.model, "Quest_2");
-        assert_eq!(device2.device, "hollywood");
-        assert_eq!(device2.transport_id, 5);
+        let devices = inputs
+            .iter()
+            .map(|s| DeviceLong::try_from(s.as_bytes().to_vec()))
+            .collect::<Result<Vec<DeviceLong>, _>>()
+            .unwrap();
+        let expected = [
+            DeviceLong {
+                identifier: "7a5158f05122195aa".to_string(),
+                state: DeviceState::Device,
+                usb: "1-5".to_string(),
+                product: "gts210vewifixx".to_string(),
+                model: "SM_T813".to_string(),
+                device: "gts210vewifi".to_string(),
+                transport_id: 4,
+            },
+            DeviceLong {
+                identifier: "1WMHH810H12203".to_string(),
+                state: DeviceState::Sideload,
+                usb: "2-3.2".to_string(),
+                product: "hollywood".to_string(),
+                model: "Quest_2".to_string(),
+                device: "hollywood".to_string(),
+                transport_id: 5,
+            },
+            DeviceLong {
+                identifier: "192.168.1.100:5555".to_string(),
+                state: DeviceState::Device,
+                usb: "Unk".to_string(),
+                product: "hollywood".to_string(),
+                model: "Quest_2".to_string(),
+                device: "hollywood".to_string(),
+                transport_id: 6,
+            },
+        ];
+        assert_eq!(devices, expected);
     }
 
     #[test]
