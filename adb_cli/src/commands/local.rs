@@ -33,4 +33,7 @@ pub enum LocalCommand {
         #[arg(short)]
         grant_runtime_permissions: bool,
     },
+    /// Restarts the device's adbd listening on TCP on the specified port.
+    #[clap(name = "tcpip")]
+    TcpIp { port: u16 },
 }

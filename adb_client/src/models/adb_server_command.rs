@@ -22,6 +22,7 @@ pub(crate) enum AdbServerCommand {
     FrameBuffer,
     Sync,
     Reboot(RebootType),
+    TcpIp(u16),
 }
 
 impl Display for AdbServerCommand {
@@ -53,6 +54,7 @@ impl Display for AdbServerCommand {
                 write!(f, "host:pair:{code}:{}", addr)
             }
             AdbServerCommand::FrameBuffer => write!(f, "framebuffer:"),
+            AdbServerCommand::TcpIp(port) => write!(f, "tcpip:{port}"),
         }
     }
 }

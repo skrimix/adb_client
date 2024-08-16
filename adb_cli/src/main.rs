@@ -71,6 +71,10 @@ fn main() -> Result<()> {
                     device.install(&apk_path, reinstall, grant_runtime_permissions)?;
                     println!("Installed {apk_path}");
                 }
+                LocalCommand::TcpIp { port } => {
+                    println!("Restarting adbd listening on TCP on port {port}");
+                    device.tcpip(port)?;
+                }
             }
         }
         Command::Host(host) => {
