@@ -44,9 +44,10 @@ mod tests {
     #[test]
     fn test_static_devices_long() {
         let inputs = [
-            "7a5158f05122195aa       device usb:1-5 product:gts210vewifixx model:SM_T813 device:gts210vewifi transport_id:4", 
-            "1WMHH810H12203         sideload usb:2-3.2 product:hollywood model:Quest_2 device:hollywood transport_id:5",
-            "192.168.1.100:5555     device product:hollywood model:Quest_2 device:hollywood transport_id:6"
+            "7a5158f05122195aa       device 1-5 product:gts210vewifixx model:SM_T813 device:gts210vewifi transport_id:4", 
+            "1WMHH810H12000         sideload usb:2-3.2 product:hollywood model:Quest_2 device:hollywood transport_id:5",
+            "192.168.1.100:5555     device product:hollywood model:Quest_2 device:hollywood transport_id:6",
+            "1WMHH810H12000         device 2-3.2 product:hollywood model:Quest_2 device:hollywood transport_id:2",
         ];
         let devices = inputs
             .iter()
@@ -64,7 +65,7 @@ mod tests {
                 transport_id: 4,
             },
             DeviceLong {
-                identifier: "1WMHH810H12203".to_string(),
+                identifier: "1WMHH810H12000".to_string(),
                 state: DeviceState::Sideload,
                 usb: "2-3.2".to_string(),
                 product: "hollywood".to_string(),
@@ -81,8 +82,19 @@ mod tests {
                 device: "hollywood".to_string(),
                 transport_id: 6,
             },
+            DeviceLong {
+                identifier: "1WMHH810H12000".to_string(),
+                state: DeviceState::Device,
+                usb: "2-3.2".to_string(),
+                product: "hollywood".to_string(),
+                model: "Quest_2".to_string(),
+                device: "hollywood".to_string(),
+                transport_id: 2,
+            },
         ];
-        assert_eq!(devices, expected);
+        for i in 0..inputs.len() {
+            assert_eq!(devices[i], expected[i]);
+        }
     }
 
     #[test]
