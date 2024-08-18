@@ -6,7 +6,7 @@ use crate::{DeviceState, RustADBError};
 use regex::bytes::Regex;
 
 lazy_static! {
-    static ref DEVICES_LONG_REGEX: Regex = Regex::new(r"^(?P<serial>[\S]+)\s*(?P<adb_status>[\S]+)? ?(usb:(?P<usb>[\S]+))? ?(product:(?P<product>[\S]+))? ?(model:(?P<model>[\S]+))? ?(device:(?P<device>[\S]+))? ?(transport_id:(?P<transport_id>[\S]+))?$").expect("cannot build devices long regex");
+    static ref DEVICES_LONG_REGEX: Regex = Regex::new("^(?P<identifier>\\S+)\\s+(?P<state>\\w+) ((usb:(?P<usb1>.*?)|(?P<usb2>\\d-\\d)) )?(product:(?P<product>\\w+) model:(?P<model>\\w+) device:(?P<device>\\w+) )?transport_id:(?P<transport_id>\\d+)$").expect("cannot build devices long regex");
 
 }
 
@@ -56,21 +56,24 @@ impl TryFrom<Vec<u8>> for DeviceLong {
         Ok(DeviceLong {
             identifier: String::from_utf8(
                 groups
-                    .name("serial")
+                    .name("identifier")
                     .ok_or(RustADBError::RegexParsingError)?
                     .as_bytes()
                     .to_vec(),
             )?,
             state: DeviceState::from_str(&String::from_utf8(
                 groups
-                    .name("adb_status")
+                    .name("state")
                     .ok_or(RustADBError::RegexParsingError)?
                     .as_bytes()
                     .to_vec(),
             )?)?,
-            usb: match groups.name("usb") {
-                None => "Unk".to_string(),
-                Some(usb) => String::from_utf8(usb.as_bytes().to_vec())?,
+            usb: match groups.name("usb1") {
+                Some(usb1) => String::from_utf8(usb1.as_bytes().to_vec())?,
+                None => match groups.name("usb2") {
+                    Some(usb2) => String::from_utf8(usb2.as_bytes().to_vec())?,
+                    None => "Unk".to_string(),
+                },
             },
             product: match groups.name("product") {
                 None => "Unk".to_string(),
